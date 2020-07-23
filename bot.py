@@ -21,8 +21,7 @@ def search_music(bot: Bot, update: Update):
     l = name.split()
     name2 = '+'.join(l)
     search_music = requests.get('http://127.0.0.1:8000/api/filter/?name={}'.format(name2)).json()
-    array = []
-    if search_music!=array:
+    if search_music!=[]:
         audio = search_music[0]['audio']
         audio_url =  audio[33:len(audio)]
         bot.send_message(chat_id=update.message.chat_id, text="Мы кажется что-то нашли, секунду...")
