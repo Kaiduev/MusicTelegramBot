@@ -17,16 +17,14 @@ def do_start(bot: Bot, update: Update):
 
 
 def search_music(bot: Bot, update: Update):
-    name = str(update.message.text)
-    l = name.split()
-    name2 = '+'.join(l)
-    search_music = requests.get('http://127.0.0.1:8000/api/filter/?name={}'.format(name2)).json()
-    if search_music!=[]:
-        audio = search_music[0]['audio']
-        audio_url =  audio[33:len(audio)]
+    name = update.message.text
+    search_music = requests.get('http://127.0.0.1:8000/api/filter/{}'.format(name))
+    if search_music.status_code==200:
+        music_json = search_music.json()
+        audio = music_json['audio']
         bot.send_message(chat_id=update.message.chat_id, text="Мы кажется что-то нашли, секунду...")
         bot.send_audio(chat_id=update.message.chat_id,
-                       audio=open(audio_url, 'rb')
+                       audio=open(audio, 'rb')
         )
     else:
         bot.send_message(
