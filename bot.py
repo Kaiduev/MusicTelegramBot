@@ -18,9 +18,9 @@ def do_start(bot: Bot, update: Update):
 
 def search_music(bot: Bot, update: Update):
     name = update.message.text
-    search_music = requests.get('http://127.0.0.1:8000/api/filter/{}'.format(name))
-    if search_music.status_code==200:
-        music_json = search_music.json()
+    searched_music = requests.get('http://127.0.0.1:8000/api/filter/{}'.format(name))
+    if searched_music.status_code == 200:
+        music_json = searched_music.json()
         audio = music_json['audio']
         bot.send_message(chat_id=update.message.chat_id, text="Мы кажется что-то нашли, секунду...")
         bot.send_audio(chat_id=update.message.chat_id,
@@ -60,9 +60,9 @@ def main():
     )
     start_handler = CommandHandler("start", do_start)
     music_search_handler = MessageHandler(Filters.text, search_music)
-    send_task_handler = CommandHandler("get_music", send_music)
+    send_music_handler = CommandHandler("get_music", send_music)
     updater.dispatcher.add_handler(start_handler)
-    updater.dispatcher.add_handler(send_task_handler)
+    updater.dispatcher.add_handler(send_music_handler)
     updater.dispatcher.add_handler(music_search_handler)
 
     updater.start_polling()
