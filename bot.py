@@ -6,7 +6,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import Filters
 
-TOKEN = '1385978687:AAGSeBuD4hQSS2DEALZiyVgenXQzgeem4GY'
+from bot.config import TOKEN
 
 
 def do_start(bot: Bot, update: Update):
@@ -26,11 +26,15 @@ def search_music(bot: Bot, update: Update):
         bot.send_audio(chat_id=update.message.chat_id,
                        audio=open(audio, 'rb')
         )
+        bot.delete_message(chat_id=update.message.chat_id,
+                           message_id=update.message.message_id)
     else:
         bot.send_message(
             chat_id=update.message.chat_id,
             text="Песни '{}' еще нет в нашей медиатеке".format(name)
         )
+        bot.delete_message(chat_id=update.message.chat_id,
+                           message_id=update.message.message_id)
 
 
 def send_music(bot: Bot, update: Update):
@@ -43,6 +47,8 @@ def send_music(bot: Bot, update: Update):
     bot.send_audio(chat_id=update.message.chat_id,
                    audio=open(audio, 'rb')
     )
+    bot.delete_message(chat_id=update.message.chat_id,
+                       message_id=update.message.message_id)
 
 
 def main():
@@ -58,7 +64,6 @@ def main():
     updater.dispatcher.add_handler(start_handler)
     updater.dispatcher.add_handler(send_task_handler)
     updater.dispatcher.add_handler(music_search_handler)
-
 
     updater.start_polling()
     updater.idle()
